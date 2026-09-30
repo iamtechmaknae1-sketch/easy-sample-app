@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CBRE — Sample Data Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <header>
+    <h1>CBRE — Sample Data Dashboard</h1>
+    <p class="subtitle">A tiny dashboard showing sample company data and charts</p>
+  </header>
+
+  <main>
+    <section class="overview">
+      <h2>Overview</h2>
+      <div id="company-overview">Loading overview…</div>
+    </section>
+
+    <section class="charts">
+      <div class="chart-card">
+        <h3>Revenue by Quarter</h3>
+        <canvas id="revenueChart" aria-label="Revenue by quarter" role="img"></canvas>
+      </div>
+
+      <div class="chart-card">
+        <h3>Occupancy by Region</h3>
+        <canvas id="occupancyChart" aria-label="Occupancy by region" role="img"></canvas>
+      </div>
+    </section>
+
+    <section class="table">
+      <h2>Sample Properties</h2>
+      <table id="propertiesTable" aria-describedby="properties-desc">
+        <caption id="properties-desc">A short list of sample properties</caption>
+        <thead>
+          <tr><th>Name</th><th>City</th><th>Type</th><th>Size (sq ft)</th><th>Occupancy</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer>
+    <small>Data shown are fictional sample data for demonstration only.</small>
+  </footer>
+
+  <script>
+    async function loadData() {
+      try {
+        const res = await fetch('data.json');
+        const data = await res.json();
+        renderOverview(data);
+        renderTable(data.properties);
+        renderRevenueChart(data.revenue);
+        renderOccupancyChart(data.occupancy);
+      } catch (err) {
+        console.error(err);
+        document.getElementById('company-overview').textContent = 'Failed to load data.';
+      }
+    }
+
+    function renderOverview(data) {
+      const el = document.getElementById('company-overview');
+      el.innerHTML = `
+        <p><strong>Company:</strong> ${data.company}</p>
+        <p><strong>Period:</strong> ${data.period}</p>
+        <p>${data.description}</p>
+      `;
+    }
+
+    function renderTable(properties) {
+      const tbody = document.querySelector('#propertiesTable tbody');
+      tbody.innerHTML = '';
+      properties.forEach(p => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${p.name}</td>
+          <td>${p.city}</td>
+          <td>${p.type}</td>
+          <td>${p.size.toLocaleString()}</td>
+          <td>${p.occupancy}%</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function renderRevenueChart(revenue) {
+      const ctx = document.getElementById('revenueChart');
+      const labels = revenue.map(r => r.label);
+      const values = revenue.map(r => r.value);
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{
+            label: 'Revenue (USD, millions)',
+            data: values,
+            backgroundColor: 'rgba(43,124,255,0.7)'
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: { beginAtZero: true }
+          }
+        }
+      });
+    }
+
+    function renderOccupancyChart(occupancy) {
+      const ctx = document.getElementById('occupancyChart');
+      const labels = occupancy.map(o => o.region);
+      const values = occupancy.map(o => o.rate);
+      new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels,
+          datasets: [{
+            label: 'Occupancy %',
+            data: values,
+            backgroundColor: ['#2b7cff','#00b389','#ffb020','#ff6b6b']
+          }]
+        },
+        options: {
+          responsive: true
+        }
+      });
+    }
+
+    // load on start
+    loadData();
+  </script>
+</body>
+</html>

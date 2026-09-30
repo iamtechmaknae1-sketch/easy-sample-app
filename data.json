@@ -1,0 +1,23 @@
+{
+  "company": "CBRE (sample)",
+  "period": "2026 Q1",
+  "description": "This dashboard shows fictional sample data representing key metrics such as revenue and occupancy across regions and a short property list.",
+  "revenue": [
+    { "label": "Q1 2025", "value": 120.5 },
+    { "label": "Q2 2025", "value": 130.8 },
+    { "label": "Q3 2025", "value": 145.1 },
+    { "label": "Q4 2025", "value": 155.2 }
+  ],
+  "occupancy": [
+    { "region": "Americas", "rate": 92 },
+    { "region": "EMEA", "rate": 88 },
+    { "region": "APAC", "rate": 90 },
+    { "region": "LATAM", "rate": 85 }
+  ],
+  "properties": [
+    { "name": "One Finance Plaza", "city": "New York, NY", "type": "Office", "size": 220000, "occupancy": 95 },
+    { "name": "Harbor View Center", "city": "San Francisco, CA", "type": "Office", "size": 150000, "occupancy": 89 },
+    { "name": "Metro Retail Park", "city": "Chicago, IL", "type": "Retail", "size": 98000, "occupancy": 92 },
+    { "name": "Greenfield Logistics Hub", "city": "Dallas, TX", "type": "Industrial", "size": 340000, "occupancy": 86 }
+  ]
+}
